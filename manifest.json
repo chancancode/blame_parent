@@ -1,0 +1,12 @@
+{
+  "name": "GitHub: Blame Parent",
+  "description": "Add a link to blame the parent of a commit on the GitHub blame view",
+  "version": "1.0",
+  "content_scripts": [
+    {
+      "matches": ["*://github.com/*/blame/*"],
+      "js": ["blame_parent.js"]
+    }
+  ],
+  "manifest_version": 2
+}
