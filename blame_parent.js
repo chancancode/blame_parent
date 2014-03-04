@@ -13,8 +13,6 @@
     cloned.classList.add('blame-parent');
 
     cloned.addEventListener('click', function(e){
-      var _e;
-
       // Dispatch the event again without the alt key
       if(e.altKey){
         e.preventDefault();
