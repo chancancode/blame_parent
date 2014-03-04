@@ -1,11 +1,10 @@
 (function(){
-  var blameCommitLinks = document.querySelectorAll('.commitinfo > code > a:nth-child(2)');
-  var blameParentLinks = [];
+  var nodes = document.querySelectorAll('.commitinfo > code > a:nth-child(2)');
 
   var node, cloned, href;
 
-  for(var i=0;i<blameCommitLinks.length;i++){
-    node = blameCommitLinks[i];
+  for(var i=0;i<nodes.length;i++){
+    node = nodes[i];
     href = node.getAttribute('href');
 
     cloned = node.cloneNode(true);
