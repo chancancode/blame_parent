@@ -1,18 +1,12 @@
 (function(){
-  var nodes = document.querySelectorAll('.commitinfo > code > a:nth-child(2)');
+  var shaMatcher  = /[0-9a-f]{40}/,
+      urlTemplate = document.location.href.replace(/blame\/[^\/]+\//, 'blame/<SHA>/'),
+      links       = document.querySelectorAll('a.blame-sha');
 
-  var node, cloned, href;
+  var show, blame, blameParent, sha;
 
-  for(var i=0;i<nodes.length;i++){
-    node = nodes[i];
-    href = node.getAttribute('href');
-
-    cloned = node.cloneNode(true);
-    cloned.textContent = '^';
-    cloned.setAttribute('href', href.replace(/blame\/([0-9a-f]+)\//, 'blame/$1%5E/'));
-    cloned.classList.add('blame-parent');
-
-    cloned.addEventListener('click', function(e){
+  function normalizeClickEvent(node) {
+    node.addEventListener('click', function(e){
       // Dispatch the event again without the alt key
       if(e.altKey){
         e.preventDefault();
@@ -31,23 +25,42 @@
         }));
       }
     });
+  }
 
-    node.classList.add('blame-commit');
+  for(var i=0;i<links.length;i++){
+    show        = links[i];
+    blame       = links[i].cloneNode(true);
+    blameParent = links[i].cloneNode(true);
 
-    node.parentNode.insertBefore(cloned, node);
+    show.classList.add('bp-show-commit');
+    blame.classList.add('bp-blame-commit');
+    blameParent.classList.add('bp-blame-parent');
+
+    sha = shaMatcher.exec( blame.getAttribute('href') )[0];
+
+    blame.setAttribute('href', urlTemplate.replace('<SHA>', sha));
+    blameParent.setAttribute('href', urlTemplate.replace('<SHA>', sha + '%5E'));
+
+    blameParent.innerText = "^";
+
+    normalizeClickEvent(blame);
+    normalizeClickEvent(blameParent);
+
+    show.parentNode.insertBefore(blameParent, show);
+    show.parentNode.insertBefore(blame, show);
   }
 
   var style = document.createElement('style');
 
   style.setAttribute('type', 'text/css');
   document.head.appendChild(style);
-  
+
   var enable = function(){
-    style.textContent = '.blame-parent { display: inline; }\n.blame-commit { display: none; }'
+    style.textContent = '.bp-show-commit { display: none; }\n.bp-blame-commit, .bp-blame-parent { display: inline; font-weight: bold; margin-left: 5px; }'
   };
 
   var disable = function(){
-    style.textContent = '.blame-commit { display: inline; }\n.blame-parent { display: none; }'
+    style.textContent = '.bp-show-commit { display: inline; }\n.bp-blame-commit, .bp-blame-parent { display: none; }'
   };
 
   disable();
