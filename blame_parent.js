@@ -39,7 +39,7 @@
     sha = shaMatcher.exec( blame.getAttribute('href') )[0];
 
     blame.setAttribute('href', urlTemplate.replace('<SHA>', sha));
-    blameParent.setAttribute('href', urlTemplate.replace('<SHA>', sha + '%5E'));
+    blameParent.setAttribute('href', urlTemplate.replace('<SHA>', sha));
 
     blameParent.innerText = "^";
 
